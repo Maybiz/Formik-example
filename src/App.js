@@ -1,12 +1,14 @@
 import React, { Component } from 'react'
-import { Formik } from 'formik'
+import { Formik, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
+import CustomInput from './components/CustomInput'
+import CustomErrorForm from './components/CustomErrorForm'
 
 export class App extends Component {
 
   userSchema = Yup.object().shape({
     name: Yup.string().min(3, 'Trop court !').max(20, 'Trop long !').required('Requis'),
-    email: Yup.string().email("L'email doit être valide"),
+    email: Yup.string().email("L'email doit être valide").required('Requis'),
     password: Yup.string().min(5, 'Trop court')
   })
 
@@ -26,27 +28,14 @@ export class App extends Component {
 					{({ values, handleBlur, handleChange, handleSubmit, isSubmitting, errors, touched }) => (
 
 						<form onSubmit={handleSubmit} className="bg-white border p-5 d-flex flex-column">
-
-							<div className="form-group">
-								<label>Nom</label>
-								<input type="text" name="name" className="form-control" onChange={handleChange} onBlur={handleBlur} value={values.name} />
-                {errors.name && touched.name 
-                && <div className="text-danger">{errors.name}</div>}
-							</div>
-
-							<div className="form-group">
-								<label>Adresse email</label>
-								<input type="email" name="email" className="form-control" onChange={handleChange} onBlur={handleBlur} value={values.email} />
-                {errors.email && touched.email 
-                && <div className="text-danger">{errors.email}</div>}
-							</div>
-
-							<div className="form-group">
-								<label>Mot de passe</label>
-								<input type="password" name="password" className="form-control" onChange={handleChange} onBlur={handleBlur} value={values.password} />
-                {errors.password && touched.password 
-                && <div className="text-danger">{errors.password}</div>}
-							</div>
+              <Field name="name" label="Nom" component={CustomInput} />
+              <ErrorMessage name="name" component={CustomErrorForm} />
+              
+              <Field name="email" type="email" label="Email" component={CustomInput} />
+              <ErrorMessage name="email" component={CustomErrorForm} />
+              
+              <Field name="password" type="password" label="Password" component={CustomInput} />
+              <ErrorMessage name="password" component={CustomErrorForm} />
 
 							<button type="submit" className="btn btn-primary" disabled={isSubmitting}>Envoyer</button>
 
